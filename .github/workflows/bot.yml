@@ -1,21 +1,27 @@
-name: Grok Swing Bot
+name: BTC Levels Bot
 
 on:
   schedule:
-    - cron: '*/30 * * * *'  # каждые 30 минут
-  workflow_dispatch:
+    - cron: '0 * * * *'      # Каждый час в 00 минут (например, 10:00, 11:00, 12:00...)
+  workflow_dispatch:         # Ручной запуск кнопкой (оставляем для теста)
 
 jobs:
-  run:
+  run-bot:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v4
+
+      - name: Установка Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: |
+
+      - name: Установка библиотек
+        run: |
           pip install requests python-telegram-bot==20.7
-          python main.py
+
+      - name: Запуск бота
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
+        run: python main.py
